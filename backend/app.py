@@ -1,12 +1,17 @@
 from flask import Flask, request, jsonify
 import os
+import numpy as np
+#OpenCV
+import cv2 as cv
+#YOLO
+from ultralytics import YOLO
 
 app = Flask(__name__)
 
 @app.route("/process-video", methods=["POST"])
 def process_video():
+    #Takes the video from the post request and saves it in our storedVids folder
     video_file = request.files['video']
-
     upload_path = os.path.join("storedVids", video_file.filename)
     video_file.save(upload_path)
 
@@ -15,6 +20,59 @@ def process_video():
     return jsonify({"timestamps": timestamps})
 
 def run_detection(path):
-    #Test values
-    return ["00:12", "01:03"]  
+    cap = cv.VideoCapture(path)
+
+    if not cap.isOpened():
+        print("Error opening the video file")
+        return []
+
+    #YOLO model
+    model = YOLO("yolov8n.pt")
+    fps = cap.get(cv.CAP_PROP_FPS)
+    frameNumber = 0
+    timestamps = []
+    PersonFlag = False
+    mostRecentTimeStamp = 0
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        # if frame is read correctly ret is True
+        if not ret:
+            print("Can't receive frame (stream end?). Exiting ...")
+            break
+
+        frameNumber += 1
+
+        #Run Face detection with YOLO
+        results = model.predict(frame, verbose = False)
+        #Get each detected object in the frame
+        boxes = results[0].boxes
+        PersonFlagForFrame = False
+
+        if boxes is not None:
+            for box in boxes:
+                #Grab all the class id of the objects
+                class_id = int(box.cls[0])
+                #0 is human
+                if class_id == 0:
+                    PersonFlagForFrame = True
+                    break
+        
+        #If person was found entering frame
+        if PersonFlagForFrame and not PersonFlag:
+            seconds = frameNumber / fps
+            timestamps.append(format_seconds(seconds))
+
+        PersonFlag = PersonFlagForFrame
+
+    cap.release()
+    return timestamps
+
+
+#helper function to format the time
+def format_seconds(seconds):
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    secs = int(seconds % 60)
+    return f"{hours:02}:{minutes:02}:{secs:02}"
 
