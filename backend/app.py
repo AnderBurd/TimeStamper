@@ -32,6 +32,7 @@ def run_detection(path):
     frameNumber = 0
     timestamps = []
     PersonFlag = False
+    #Used so multiple people entering in the same second doesnt get flagged multiple times
     mostRecentTimeStamp = 0
 
     while cap.isOpened():
@@ -53,7 +54,7 @@ def run_detection(path):
             for box in boxes:
                 #Grab all the class id of the objects
                 class_id = int(box.cls[0])
-                #0 is human
+                #class 0 is human
                 if class_id == 0:
                     PersonFlagForFrame = True
                     break
@@ -61,7 +62,10 @@ def run_detection(path):
         #If person was found entering frame
         if PersonFlagForFrame and not PersonFlag:
             seconds = frameNumber / fps
-            timestamps.append(format_seconds(seconds))
+            formattedTime = format_seconds(seconds)
+            #Check that we havent flagged this second with a entry yet
+            if formattedTime not in timestamps:
+                timestamps.append(formattedTime)
 
         PersonFlag = PersonFlagForFrame
 
