@@ -1,0 +1,16 @@
+.uploader{
+  background-color: #393E46;
+  height: 20vh;
+  width: 50vh;
+  border-radius: 2vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #DFD0B8;
+  font-size: 2vh;
+}
+
+.uploader:hover {
+  background-color: #363a41;
+  cursor: pointer;
+}
