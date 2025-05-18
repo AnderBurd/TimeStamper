@@ -5,8 +5,13 @@ import numpy as np
 import cv2 as cv
 #YOLO
 from ultralytics import YOLO
+from flask_cors import CORS
+
+
 
 app = Flask(__name__)
+
+CORS(app)
 
 @app.route("/process-video", methods=["POST"])
 def process_video():
