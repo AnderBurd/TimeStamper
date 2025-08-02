@@ -34,7 +34,7 @@ export default function fileUploader(){
             }
         </div>
         
-        <p>{timeStamps}</p>
+        <p>{timeStamps !== "No timestamps here" ? timeStamps : null}</p>
     </div>
    ) 
 }
