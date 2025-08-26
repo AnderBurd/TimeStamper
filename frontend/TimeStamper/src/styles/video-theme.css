@@ -1,0 +1,48 @@
+/*Styles the video player*/
+
+/* Import base Video.js styles */
+@import "video.js/dist/video-js.css";
+
+/*Use this to set size of player*/
+.videojs-wrapper {
+  width: 80%;
+  max-width: 1000px;
+  margin: 2rem auto;
+}
+
+.video-js {
+  max-width: 100vh;
+  width: 100%;
+  margin: 1rem auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Make the big play button look clean */
+.vjs-big-play-button {
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.25);
+  transition: background-color 0.3s ease;
+}
+
+.vjs-big-play-button:hover {
+  background-color: rgba(255,255,255,0.4);
+}
+
+/* Control bar */
+.vjs-control-bar {
+  background: rgba(0,0,0,0.6);
+  font-size: 14px;
+}
+
+/* Progress bar */
+.vjs-play-progress {
+  background-color: #4cafef; 
+}
+
+.vjs-volume-level {
+  background-color: #4cafef;
+}

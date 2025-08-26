@@ -9,14 +9,15 @@ function App() {
 
   return (
     <div className="container">
-      <div className="uploader">
         {!uploadedVideo ? (
+          <div className="uploader">
           <FileUploader setUploadedVideo={setUploadedVideo} />
+          </div>
         ) : (
           <VideoPlayer videoFile={uploadedVideo} />
         )
         }
-      </div>
+
     </div>
   )
 }

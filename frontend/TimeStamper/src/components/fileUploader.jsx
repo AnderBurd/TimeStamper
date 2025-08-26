@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {useDropzone} from "react-dropzone"
 import "../styles/fileUploader.css"
 
-
+//Used to handle uploading videos
 export default function fileUploader({setUploadedVideo}){
     const [timeStamps,setTimeStamps] = useState("No timestamps here")
 
