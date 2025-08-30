@@ -4,7 +4,6 @@ import "../styles/fileUploader.css"
 
 //Used to handle uploading videos
 export default function fileUploader({setUploadedVideo, setTimeStamps}){
-    //const [timeStamps,setTimeStamps] = useState("No timestamps here")
 
     const onDrop = useCallback(acceptedFiles=>{
         //Our video file
