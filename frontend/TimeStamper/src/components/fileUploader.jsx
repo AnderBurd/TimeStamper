@@ -3,8 +3,8 @@ import {useDropzone} from "react-dropzone"
 import "../styles/fileUploader.css"
 
 //Used to handle uploading videos
-export default function fileUploader({setUploadedVideo}){
-    const [timeStamps,setTimeStamps] = useState("No timestamps here")
+export default function fileUploader({setUploadedVideo, setTimeStamps}){
+    //const [timeStamps,setTimeStamps] = useState("No timestamps here")
 
     const onDrop = useCallback(acceptedFiles=>{
         //Our video file
@@ -40,7 +40,6 @@ export default function fileUploader({setUploadedVideo}){
             }
         </div>
         
-        <p>{timeStamps !== "No timestamps here" ? timeStamps : null}</p>
     </div>
    ) 
 }
