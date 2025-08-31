@@ -24,7 +24,11 @@ def process_video():
 
     return jsonify({"timestamps": timestamps})
 
+
+#Runs YOLO detection on the video
 def run_detection(path):
+    #Process every n'th frame (Higher number here means faster)
+    sampleRate = 30
     cap = cv.VideoCapture(path)
 
     if not cap.isOpened():
@@ -42,37 +46,44 @@ def run_detection(path):
 
     while cap.isOpened():
         ret, frame = cap.read()
-        # if frame is read correctly ret is True
+
+        # Check if the frame is valid
         if not ret:
             print("Can't receive frame (stream end?). Exiting ...")
             break
 
-        frameNumber += 1
+        # Downsize the frame to save time (This seems to only save a few seconds on a 10 min video...)
+        frame = cv.resize(frame, (640, 360))
 
-        #Run Face detection with YOLO
-        results = model.predict(frame, verbose = False)
-        #Get each detected object in the frame
-        boxes = results[0].boxes
-        PersonFlagForFrame = False
-
-        if boxes is not None:
-            for box in boxes:
-                #Grab all the class id of the objects
-                class_id = int(box.cls[0])
-                #class 0 is human
-                if class_id == 0:
-                    PersonFlagForFrame = True
-                    break
         
-        #If person was found entering frame
-        if PersonFlagForFrame and not PersonFlag:
-            seconds = frameNumber / fps
-            formattedTime = format_seconds(seconds)
-            #Check that we havent flagged this second with a entry yet
-            if formattedTime not in timestamps:
-                timestamps.append(formattedTime)
+        frameNumber += 1
+        
+        #Only process frames at the samplerate
+        if(frameNumber % sampleRate == 0):
+            #Run Face detection with YOLO
+            results = model.predict(frame, verbose = False)
+            #Get each detected object in the frame
+            boxes = results[0].boxes
+            PersonFlagForFrame = False
 
-        PersonFlag = PersonFlagForFrame
+            if boxes is not None:
+                for box in boxes:
+                    #Grab all the class id of the objects
+                    class_id = int(box.cls[0])
+                    #class 0 is human
+                    if class_id == 0:
+                        PersonFlagForFrame = True
+                        break
+            
+            #If person was found entering frame
+            if PersonFlagForFrame and not PersonFlag:
+                seconds = frameNumber / fps
+                formattedTime = format_seconds(seconds)
+                #Check that we havent flagged this second with a entry yet
+                if formattedTime not in timestamps:
+                    timestamps.append(formattedTime)
+
+            PersonFlag = PersonFlagForFrame
 
     cap.release()
     return timestamps
