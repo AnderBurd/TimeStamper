@@ -28,7 +28,7 @@ def process_video():
 #Runs YOLO detection on the video
 def run_detection(path):
     #Process every n'th frame (Higher number here means faster)
-    sampleRate = 30
+    sampleRate = 15
     cap = cv.VideoCapture(path)
 
     if not cap.isOpened():
